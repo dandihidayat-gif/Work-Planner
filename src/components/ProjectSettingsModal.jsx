@@ -2,13 +2,36 @@ import React, { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import ModalPortal from './ModalPortal'
+import { Trash2 } from 'lucide-react'
 
-export default function ProjectSettingsModal({ project, onClose, onSaved }) {
+export default function ProjectSettingsModal({ project, onClose, onSaved, onDeleted }) {
   const { user } = useAuth()
   const [color, setColor] = useState(project.color)
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState('')
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Hapus project "${project.name}"? Semua jadwal posting, task, dan link yang terkait dengan project ini akan ikut terhapus. Tindakan ini tidak dapat dibatalkan.`
+    )
+    if (!confirmed) return
+
+    setError('')
+    setDeleting(true)
+    const { error: deleteError } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', project.id)
+
+    setDeleting(false)
+    if (deleteError) {
+      setError(deleteError.message)
+      return
+    }
+    onDeleted()
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -95,11 +118,16 @@ export default function ProjectSettingsModal({ project, onClose, onSaved }) {
             </div>
           </div>
 
-          <div className="modal-actions">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Menyimpan...' : 'Save Changes'}
+          <div className="modal-actions split">
+            <button type="button" className="btn btn-danger" onClick={handleDelete} disabled={deleting || loading}>
+              <Trash2 size={16} /> {deleting ? 'Menghapus...' : 'Delete Project'}
             </button>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+              <button type="submit" className="btn btn-primary" disabled={loading || deleting}>
+                {loading ? 'Menyimpan...' : 'Save Changes'}
+              </button>
+            </div>
           </div>
         </form>
       </div>

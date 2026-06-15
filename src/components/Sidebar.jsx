@@ -73,6 +73,10 @@ export default function Sidebar({ projects, onProjectsChange }) {
             setSettingsProject(null)
             onProjectsChange()
           }}
+          onDeleted={() => {
+            setSettingsProject(null)
+            onProjectsChange()
+          }}
         />
       )}
     </div>
