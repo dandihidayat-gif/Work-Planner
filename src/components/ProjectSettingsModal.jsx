@@ -63,7 +63,7 @@ export default function ProjectSettingsModal({ project, onClose, onSaved }) {
           <div className="field-group">
             <label className="field-label">Ganti Logo / Icon</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <div className="project-dot" style={{ background: color, width: 40, height: 40 }}>
+              <div className="project-dot" style={{ width: 40, height: 40 }}>
                 {project.logo_url
                   ? <img src={project.logo_url} alt="" />
                   : project.name.slice(0, 2).toUpperCase()}

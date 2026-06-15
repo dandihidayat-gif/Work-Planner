@@ -96,7 +96,7 @@ export default function LinksAccess() {
             {linksByProject.map(({ project, links }) => (
               <div key={project.id} className="link-group">
                 <div className="link-group-header">
-                  <div className="project-dot" style={{ background: project.color, width: 26, height: 26 }}>
+                  <div className="project-dot" style={{ width: 26, height: 26 }}>
                     {project.logo_url
                       ? <img src={project.logo_url} alt="" />
                       : project.name.slice(0, 2).toUpperCase()}

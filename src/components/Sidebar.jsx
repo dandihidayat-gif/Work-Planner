@@ -36,7 +36,7 @@ export default function Sidebar({ projects, onProjectsChange }) {
       <div className="sidebar-section-label">Projects</div>
       {projects.map((p) => (
         <div className="project-item" key={p.id} onClick={() => setSettingsProject(p)}>
-          <div className="project-dot" style={{ background: p.color }}>
+          <div className="project-dot">
             {p.logo_url
               ? <img src={p.logo_url} alt={p.name} />
               : p.name.slice(0, 2).toUpperCase()}

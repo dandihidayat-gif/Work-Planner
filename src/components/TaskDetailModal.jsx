@@ -18,7 +18,7 @@ export default function TaskDetailModal({ task, project, onClose }) {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="detail-header">
           <div className="detail-project">
-            <div className="project-dot" style={{ background: project?.color, width: 30, height: 30 }}>
+            <div className="project-dot" style={{ width: 30, height: 30 }}>
               {project?.logo_url
                 ? <img src={project.logo_url} alt="" />
                 : project?.name.slice(0, 2).toUpperCase()}
