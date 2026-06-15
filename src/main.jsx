@@ -9,6 +9,7 @@ import Signup from './pages/Signup'
 import Onboarding from './pages/Onboarding'
 import Planner from './pages/Planner'
 import TodoList from './pages/TodoList'
+import LinksAccess from './pages/LinksAccess'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -32,6 +33,9 @@ function App() {
           } />
           <Route path="/todo" element={
             <PrivateRoute><TodoList /></PrivateRoute>
+          } />
+          <Route path="/links" element={
+            <PrivateRoute><LinksAccess /></PrivateRoute>
           } />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

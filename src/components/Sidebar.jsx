@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckSquare, Plus, LogOut } from 'lucide-react'
+import { Calendar, CheckSquare, Plus, LogOut, Link2, Settings } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import AddProjectModal from './AddProjectModal'
+import ProjectSettingsModal from './ProjectSettingsModal'
 
 export default function Sidebar({ projects, onProjectsChange }) {
   const location = useLocation()
   const { user } = useAuth()
   const [showAddProject, setShowAddProject] = useState(false)
+  const [settingsProject, setSettingsProject] = useState(null)
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -27,16 +29,20 @@ export default function Sidebar({ projects, onProjectsChange }) {
       <Link to="/todo" className={`nav-item ${location.pathname === '/todo' ? 'active' : ''}`}>
         <CheckSquare size={18} /> To Do List
       </Link>
+      <Link to="/links" className={`nav-item ${location.pathname === '/links' ? 'active' : ''}`}>
+        <Link2 size={18} /> Link & Access
+      </Link>
 
       <div className="sidebar-section-label">Projects</div>
       {projects.map((p) => (
-        <div className="project-item" key={p.id}>
+        <div className="project-item" key={p.id} onClick={() => setSettingsProject(p)}>
           <div className="project-dot" style={{ background: p.color }}>
             {p.logo_url
               ? <img src={p.logo_url} alt={p.name} />
               : p.name.slice(0, 2).toUpperCase()}
           </div>
-          {p.name}
+          <span style={{ flex: 1 }}>{p.name}</span>
+          <Settings size={14} className="project-settings-icon" />
         </div>
       ))}
 
@@ -54,6 +60,17 @@ export default function Sidebar({ projects, onProjectsChange }) {
           onClose={() => setShowAddProject(false)}
           onCreated={() => {
             setShowAddProject(false)
+            onProjectsChange()
+          }}
+        />
+      )}
+
+      {settingsProject && (
+        <ProjectSettingsModal
+          project={settingsProject}
+          onClose={() => setSettingsProject(null)}
+          onSaved={() => {
+            setSettingsProject(null)
             onProjectsChange()
           }}
         />
