@@ -34,6 +34,7 @@ export default function ExportReportModal({ projects, tasks, onClose }) {
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth()) // 0-indexed
+  const [projectId, setProjectId] = useState('all')
   const [loading, setLoading] = useState(false)
 
   const handleExport = async () => {
@@ -50,6 +51,7 @@ export default function ExportReportModal({ projects, tasks, onClose }) {
     })
 
     const groups = projects
+      .filter((p) => projectId === 'all' || p.id === projectId)
       .map((p) => ({
         project: p,
         items: relevantTasks.filter((t) => t.project_id === p.id),
@@ -134,6 +136,14 @@ export default function ExportReportModal({ projects, tasks, onClose }) {
         <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 16 }}>
           Pilih periode laporan. Task dengan deadline atau completion date pada bulan tersebut akan dimasukkan ke PDF, dikelompokkan per project.
         </p>
+
+        <div className="field-group">
+          <label className="field-label">Project</label>
+          <select className="field-select" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
+            <option value="all">Semua Project</option>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </div>
 
         <div className="field-group">
           <label className="field-label">Bulan</label>
