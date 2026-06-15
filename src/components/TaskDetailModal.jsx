@@ -55,6 +55,29 @@ export default function TaskDetailModal({ task, project, onClose }) {
           </div>
         )}
 
+        {task.status === 'done' && (task.final_link || task.completion_note) && (
+          <div className="field-group" style={{ marginTop: 18 }}>
+            <label className="field-label">Final Link & Note</label>
+            {task.final_link && (
+              <a
+                href={task.final_link}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-secondary btn-block"
+                style={{ marginBottom: 8, justifyContent: 'space-between' }}
+              >
+                {task.final_link}
+                <ExternalLink size={15} />
+              </a>
+            )}
+            {task.completion_note && (
+              <div className="detail-row" style={{ marginTop: task.final_link ? 0 : 8 }}>
+                {task.completion_note}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="modal-actions">
           <button className="btn btn-primary" onClick={onClose}>Close</button>
         </div>

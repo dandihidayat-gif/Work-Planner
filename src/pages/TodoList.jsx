@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 import Sidebar from '../components/Sidebar'
 import AddTaskModal from '../components/AddTaskModal'
 import TaskDetailModal from '../components/TaskDetailModal'
+import CompleteTaskModal from '../components/CompleteTaskModal'
 import { supabase } from '../lib/supabase'
 import { Plus, ArrowUp, ArrowDown, MoreHorizontal, Eye, Trash2, PlayCircle, CheckCircle2 } from 'lucide-react'
 
@@ -10,6 +11,7 @@ export default function TodoList() {
   const [tasks, setTasks] = useState([])
   const [showAddTask, setShowAddTask] = useState(false)
   const [detailTask, setDetailTask] = useState(null)
+  const [completeTask, setCompleteTask] = useState(null)
   const [sortProject, setSortProject] = useState('all')
   const [openMenu, setOpenMenu] = useState(null)
   const menuRef = useRef(null)
@@ -159,7 +161,7 @@ export default function TodoList() {
 
                               {task.status === 'on_progress' && (
                                 <>
-                                  <button className="dropdown-item" onClick={() => updateStatus(task, 'done')}>
+                                  <button className="dropdown-item" onClick={() => { setCompleteTask(task); setOpenMenu(null) }}>
                                     <CheckCircle2 size={15} /> Task Complete
                                   </button>
                                   <button className="dropdown-item danger" onClick={() => deleteTask(task)}>
@@ -193,6 +195,14 @@ export default function TodoList() {
           task={detailTask}
           project={projectById(detailTask.project_id)}
           onClose={() => setDetailTask(null)}
+        />
+      )}
+
+      {completeTask && (
+        <CompleteTaskModal
+          task={completeTask}
+          onClose={() => setCompleteTask(null)}
+          onCompleted={() => { setCompleteTask(null); fetchTasks() }}
         />
       )}
     </div>
