@@ -18,6 +18,7 @@ export default function CompleteTaskModal({ task, onClose, onCompleted }) {
         status: 'done',
         final_link: finalLink.trim() || null,
         completion_note: note.trim() || null,
+        completed_at: new Date().toISOString().slice(0, 10),
       })
       .eq('id', task.id)
     setLoading(false)

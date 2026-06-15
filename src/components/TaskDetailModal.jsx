@@ -35,6 +35,10 @@ export default function TaskDetailModal({ task, project, onClose }) {
           <span className="detail-label">Deadline: </span>
           {task.no_deadline ? 'No Deadline' : task.deadline}
         </div>
+        <div className="detail-row">
+          <span className="detail-label">Completion Date: </span>
+          {task.completed_at || '-'}
+        </div>
 
         {links.length > 0 && (
           <div className="field-group" style={{ marginTop: 18 }}>

@@ -3,8 +3,9 @@ import Sidebar from '../components/Sidebar'
 import AddTaskModal from '../components/AddTaskModal'
 import TaskDetailModal from '../components/TaskDetailModal'
 import CompleteTaskModal from '../components/CompleteTaskModal'
+import ExportReportModal from '../components/ExportReportModal'
 import { supabase } from '../lib/supabase'
-import { Plus, ArrowUp, ArrowDown, MoreHorizontal, Eye, Trash2, PlayCircle, CheckCircle2 } from 'lucide-react'
+import { Plus, ArrowUp, ArrowDown, MoreHorizontal, Eye, Trash2, PlayCircle, CheckCircle2, FileDown } from 'lucide-react'
 
 export default function TodoList() {
   const [projects, setProjects] = useState([])
@@ -12,6 +13,7 @@ export default function TodoList() {
   const [showAddTask, setShowAddTask] = useState(false)
   const [detailTask, setDetailTask] = useState(null)
   const [completeTask, setCompleteTask] = useState(null)
+  const [showExport, setShowExport] = useState(false)
   const [sortProject, setSortProject] = useState('all')
   const [openMenu, setOpenMenu] = useState(null)
   const menuRef = useRef(null)
@@ -83,9 +85,14 @@ export default function TodoList() {
       <div className="main">
         <div className="page-header">
           <h1 className="page-title">To Do List</h1>
-          <button className="btn btn-primary" onClick={() => setShowAddTask(true)} disabled={projects.length === 0}>
-            <Plus size={17} /> Task
-          </button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button className="btn btn-secondary" onClick={() => setShowExport(true)}>
+              <FileDown size={17} /> Export Report
+            </button>
+            <button className="btn btn-primary" onClick={() => setShowAddTask(true)} disabled={projects.length === 0}>
+              <Plus size={17} /> Task
+            </button>
+          </div>
         </div>
 
         <div className="todo-toolbar">
@@ -108,6 +115,7 @@ export default function TodoList() {
                 <th>Project</th>
                 <th>Task</th>
                 <th>Deadline</th>
+                <th>Completion Date</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -125,6 +133,7 @@ export default function TodoList() {
                     </td>
                     <td>{task.title}</td>
                     <td>{task.no_deadline ? 'No Deadline' : task.deadline}</td>
+                    <td>{task.completed_at || '-'}</td>
                     <td>
                       <span className={`status-badge status-${task.status}`}>
                         {task.status.replace('_', ' ')}
@@ -203,6 +212,14 @@ export default function TodoList() {
           task={completeTask}
           onClose={() => setCompleteTask(null)}
           onCompleted={() => { setCompleteTask(null); fetchTasks() }}
+        />
+      )}
+
+      {showExport && (
+        <ExportReportModal
+          projects={projects}
+          tasks={tasks}
+          onClose={() => setShowExport(false)}
         />
       )}
     </div>
