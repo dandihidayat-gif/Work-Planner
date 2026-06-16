@@ -165,7 +165,6 @@ export default function ExportWorkReportModal({ projects, onClose }) {
         const cy = y + row * calCellH
 
         // cell bg
-        doc.setFillColor(isToday(d) ? ...LIGHT_BLUE : 255, 255, 255)
         if (isToday(d)) {
           doc.setFillColor(...LIGHT_BLUE)
         } else {
@@ -177,7 +176,7 @@ export default function ExportWorkReportModal({ projects, onClose }) {
 
         if (d) {
           // date number
-          doc.setTextColor(...isToday(d) ? PRIMARY : MUTED)
+          doc.setTextColor(...(isToday(d) ? PRIMARY : MUTED))
           doc.setFontSize(8)
           doc.setFont(undefined, 'bold')
           doc.text(String(d), cx + 5, cy + 10)
