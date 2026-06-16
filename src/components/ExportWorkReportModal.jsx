@@ -79,13 +79,20 @@ export default function ExportWorkReportModal({ projects, onClose }) {
     const periodPrefix = `${year}-${monthStr}`
 
     // fetch posts & tasks for period
-    const { data: posts } = await supabase
+    const firstDay = `${year}-${monthStr}-01`
+    const lastDayNum = new Date(year, month + 1, 0).getDate()
+    const lastDay = `${year}-${monthStr}-${String(lastDayNum).padStart(2, '0')}`
+
+    const { data: posts, error: postsError } = await supabase
       .from('post_schedules')
       .select('*')
       .in('project_id', selectedProjects)
-      .gte('post_date', `${periodPrefix}-01`)
-      .lte('post_date', `${periodPrefix}-31`)
+      .gte('post_date', firstDay)
+      .lte('post_date', lastDay)
       .order('post_date')
+
+    if (postsError) console.error('posts error:', postsError)
+    console.log('posts fetched:', posts?.length, 'period:', firstDay, '-', lastDay, 'projects:', selectedProjects)
 
     const { data: tasks } = await supabase
       .from('tasks')
