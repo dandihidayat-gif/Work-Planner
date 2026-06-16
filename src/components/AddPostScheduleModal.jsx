@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
-import { CONTENT_TYPES } from '../lib/constants'
+import { CONTENT_TYPES, PLATFORM_LIST } from '../lib/constants'
 import ModalPortal from './ModalPortal'
 
 export default function AddPostScheduleModal({ projects, defaultDate, onClose, onSaved }) {
@@ -93,7 +93,7 @@ export default function AddPostScheduleModal({ projects, defaultDate, onClose, o
           <div className="field-group">
             <label className="field-label">Platform</label>
             <div className="checkbox-grid">
-              {['Instagram', 'TikTok', 'Facebook', 'LinkedIn'].map((p) => (
+              {PLATFORM_LIST.map((p) => (
                 <label key={p}>
                   <input
                     type="checkbox"

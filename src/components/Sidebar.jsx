@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckSquare, Plus, LogOut, Link2, Settings } from 'lucide-react'
+import { Calendar, CheckSquare, Plus, LogOut, Link2, Settings, FileDown } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import AddProjectModal from './AddProjectModal'
 import ProjectSettingsModal from './ProjectSettingsModal'
+import ExportWorkReportModal from './ExportWorkReportModal'
 
 export default function Sidebar({ projects, onProjectsChange }) {
   const location = useLocation()
   const { user } = useAuth()
   const [showAddProject, setShowAddProject] = useState(false)
   const [settingsProject, setSettingsProject] = useState(null)
+  const [showExportWork, setShowExportWork] = useState(false)
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -46,6 +48,15 @@ export default function Sidebar({ projects, onProjectsChange }) {
         </div>
       ))}
 
+      <button
+        className="nav-item"
+        style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', marginTop: 4, color: 'var(--primary)', fontWeight: 700 }}
+        onClick={() => setShowExportWork(true)}
+        disabled={projects.length === 0}
+      >
+        <FileDown size={17} /> Export Work Report
+      </button>
+
       <div className="sidebar-bottom">
         <button className="btn btn-primary btn-block" onClick={() => setShowAddProject(true)}>
           <Plus size={17} /> New Project
@@ -77,6 +88,13 @@ export default function Sidebar({ projects, onProjectsChange }) {
             setSettingsProject(null)
             onProjectsChange()
           }}
+        />
+      )}
+
+      {showExportWork && (
+        <ExportWorkReportModal
+          projects={projects}
+          onClose={() => setShowExportWork(false)}
         />
       )}
     </div>

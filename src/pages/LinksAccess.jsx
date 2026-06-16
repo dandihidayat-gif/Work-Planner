@@ -148,6 +148,10 @@ export default function LinksAccess() {
 
         {tab === 'types' && (
           <>
+            <div className="link-type-desc">
+              <strong>Link Type</strong> adalah kategori/jenis link yang bisa kamu pasang di tab "Link" (misalnya Instagram, Website, Figma, Wordpress, Google Drive). 5 jenis dasar sudah disediakan secara default dan tidak bisa dihapus. Kamu bisa menambahkan jenis link lain sesuai kebutuhan project, misalnya Notion, Canva, atau Trello, lewat tombol "+ New Link Type".
+            </div>
+
             {linkTypes.length === 0 ? (
               <div className="empty-state">
                 <h3>Belum ada Link Type</h3>
@@ -174,9 +178,11 @@ export default function LinksAccess() {
                       </td>
                       <td>{lt.name}</td>
                       <td>
-                        <button className="table-icon-btn" onClick={() => deleteLinkType(lt.id)} title="Delete">
-                          <Trash2 size={15} />
-                        </button>
+                        {!lt.is_default && (
+                          <button className="table-icon-btn" onClick={() => deleteLinkType(lt.id)} title="Delete">
+                            <Trash2 size={15} />
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}

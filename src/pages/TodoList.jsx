@@ -57,11 +57,18 @@ export default function TodoList() {
     const swapIdx = direction === 'up' ? idx - 1 : idx + 1
     if (swapIdx < 0 || swapIdx >= sameProjectTasks.length) return
 
-    const a = sameProjectTasks[idx]
-    const b = sameProjectTasks[swapIdx]
+    // swap positions in array
+    const reordered = [...sameProjectTasks]
+    const [moved] = reordered.splice(idx, 1)
+    reordered.splice(swapIdx, 0, moved)
 
-    await supabase.from('tasks').update({ sort_order: b.sort_order }).eq('id', a.id)
-    await supabase.from('tasks').update({ sort_order: a.sort_order }).eq('id', b.id)
+    // reassign sequential sort_order to avoid collisions
+    await Promise.all(
+      reordered.map((t, i) =>
+        supabase.from('tasks').update({ sort_order: i }).eq('id', t.id)
+      )
+    )
+
     fetchTasks()
   }
 
