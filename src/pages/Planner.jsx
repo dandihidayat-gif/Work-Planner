@@ -22,7 +22,7 @@ export default function Planner() {
   const [selectedPost, setSelectedPost] = useState(null)
 
   const fetchProjects = useCallback(async () => {
-    const { data } = await supabase.from('projects').select('*').order('created_at')
+    const { data } = await supabase.from('projects').select('*').eq('is_archived', false).order('created_at')
     setProjects(data || [])
   }, [])
 
