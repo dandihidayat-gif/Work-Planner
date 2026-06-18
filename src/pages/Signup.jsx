@@ -45,8 +45,8 @@ export default function Signup() {
       <div className="auth-form-side">
         <div className="auth-card">
           <div className="auth-logo">
-            <img src="/icons/logo.png" alt="Content Planner" />
-            Content Planner
+            <img src="/icons/logo.svg" alt="TALJER" />
+            TALJER
           </div>
 
           {done ? (

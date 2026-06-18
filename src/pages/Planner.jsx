@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Plus, Check } from 'lucide-react'
 import Sidebar from '../components/Sidebar'
 import AddPostScheduleModal from '../components/AddPostScheduleModal'
 import PostDetailModal from '../components/PostDetailModal'
+import TopNav from '../components/TopNav'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import {
@@ -69,6 +70,7 @@ export default function Planner() {
       <Sidebar projects={projects} onProjectsChange={fetchProjects} />
 
       <div className="main">
+        <TopNav title={`${format(currentMonth, 'MMMM yyyy')}`} />
         <div className="page-header">
           <div className="page-title-group">
             <button className="icon-btn" onClick={() => setCurrentMonth((m) => subMonths(m, 1))}>

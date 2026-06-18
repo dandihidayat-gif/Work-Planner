@@ -76,13 +76,12 @@ a { color: var(--primary); text-decoration: none; }
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 10px 24px;
-  font-weight: 800;
-  font-size: 19px;
-  letter-spacing: -0.02em;
+  padding: 8px 10px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
 }
 
-.sidebar-logo img { width: 30px; height: 30px; border-radius: 8px; }
+.sidebar-logo img { width: 34px; height: 34px; border-radius: 8px; }
 
 .nav-item {
   display: flex;
@@ -670,6 +669,54 @@ a { color: var(--primary); text-decoration: none; }
   line-height: 1.6;
   color: var(--text);
   margin-bottom: 18px;
+}
+
+/* ===== Top Nav ===== */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.top-nav-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.top-nav-right {
+  position: relative;
+}
+
+.top-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px 7px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: background .15s;
+}
+.top-nav-user:hover { background: var(--surface-2); }
+
+.topnav-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  min-width: 180px;
+  z-index: 200;
+  padding: 4px;
 }
 
 /* ===== Sidebar Header / User Dropdown ===== */

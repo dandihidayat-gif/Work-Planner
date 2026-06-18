@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import Sidebar from '../components/Sidebar'
 import AddProjectLinkModal from '../components/AddProjectLinkModal'
 import AddLinkTypeModal from '../components/AddLinkTypeModal'
+import TopNav from '../components/TopNav'
 import { supabase } from '../lib/supabase'
 import { Plus, ExternalLink, Trash2 } from 'lucide-react'
 
@@ -59,6 +60,7 @@ export default function LinksAccess() {
       <Sidebar projects={projects} onProjectsChange={fetchProjects} />
 
       <div className="main">
+        <TopNav title="Link &amp; Access" />
         <div className="page-header">
           <h1 className="page-title">Link &amp; Access</h1>
           {tab === 'links' ? (

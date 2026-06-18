@@ -4,6 +4,7 @@ import AddTaskModal from '../components/AddTaskModal'
 import TaskDetailModal from '../components/TaskDetailModal'
 import CompleteTaskModal from '../components/CompleteTaskModal'
 import ExportReportModal from '../components/ExportReportModal'
+import TopNav from '../components/TopNav'
 import { supabase } from '../lib/supabase'
 import { Plus, ArrowUp, ArrowDown, MoreHorizontal, Eye, Trash2, PlayCircle, CheckCircle2, FileDown } from 'lucide-react'
 
@@ -90,6 +91,7 @@ export default function TodoList() {
       <Sidebar projects={projects} onProjectsChange={fetchProjects} />
 
       <div className="main">
+        <TopNav title="To Do List" />
         <div className="page-header">
           <h1 className="page-title">To Do List</h1>
           <div style={{ display: 'flex', gap: 10 }}>

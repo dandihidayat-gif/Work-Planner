@@ -1,76 +1,30 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckSquare, Plus, LogOut, Link2, Settings, FileDown, Archive, User, ChevronDown } from 'lucide-react'
-import { supabase } from '../lib/supabase'
-import { useAuth } from '../lib/AuthContext'
+import { Calendar, CheckSquare, Plus, Link2, Settings, FileDown, Archive } from 'lucide-react'
 import AddProjectModal from './AddProjectModal'
 import ProjectSettingsModal from './ProjectSettingsModal'
 import ExportWorkReportModal from './ExportWorkReportModal'
-import AccountSettingsModal from './AccountSettingsModal'
 import ProjectArchiveModal from './ProjectArchiveModal'
 
 export default function Sidebar({ projects, onProjectsChange }) {
   const location = useLocation()
-  const { user } = useAuth()
   const [showAddProject, setShowAddProject] = useState(false)
   const [settingsProject, setSettingsProject] = useState(null)
   const [showExportWork, setShowExportWork] = useState(false)
-  const [showAccount, setShowAccount] = useState(false)
   const [showArchive, setShowArchive] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef(null)
-
-  const fullName = user?.user_metadata?.full_name || ''
-  const email = user?.email || ''
-  const initials = fullName
-    ? fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
-    : email.slice(0, 2).toUpperCase()
-  const avatar = user?.user_metadata?.avatar_url
-
-  useEffect(() => {
-    const handler = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [])
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-  }
 
   return (
     <div className="sidebar">
-      <div className="sidebar-header" ref={dropdownRef}>
-        <button className="sidebar-user-btn" onClick={() => setDropdownOpen(v => !v)}>
-          <div className="user-avatar-sm">
-            {avatar ? <img src={avatar} alt="" /> : <span>{initials}</span>}
-          </div>
-          <div className="user-info">
-            <div className="user-name">{fullName || email}</div>
-            <div className="user-email">{fullName ? email : ''}</div>
-          </div>
-          <ChevronDown size={15} className={`dropdown-chevron ${dropdownOpen ? 'open' : ''}`} />
-        </button>
-
-        {dropdownOpen && (
-          <div className="sidebar-dropdown">
-            <button className="dropdown-item" onClick={() => { setDropdownOpen(false); setShowAccount(true) }}>
-              <User size={15} /> Account
-            </button>
-            <button className="dropdown-item" onClick={() => { setDropdownOpen(false); setShowArchive(true) }}>
-              <Archive size={15} /> Project Archive
-            </button>
-            <div style={{ height: 1, background: 'var(--border)', margin: '4px 0' }} />
-            <button className="dropdown-item danger" onClick={handleLogout}>
-              <LogOut size={15} /> Logout
-            </button>
-          </div>
-        )}
+      {/* LOGO */}
+      <div className="sidebar-logo">
+        <img src="/icons/logo.svg" alt="TALJER" style={{ width: 34, height: 34 }} />
+        <div>
+          <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.02em', lineHeight: 1 }}>TALJER</div>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.03em' }}>Task List Manager</div>
+        </div>
       </div>
 
+      {/* NAV */}
       <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
         <Calendar size={18} /> Planner
       </Link>
@@ -81,6 +35,7 @@ export default function Sidebar({ projects, onProjectsChange }) {
         <Link2 size={18} /> Link & Access
       </Link>
 
+      {/* PROJECTS */}
       <div className="sidebar-section-label">Projects</div>
       {projects.map((p) => (
         <div className="project-item" key={p.id} onClick={() => setSettingsProject(p)}>
@@ -92,21 +47,26 @@ export default function Sidebar({ projects, onProjectsChange }) {
         </div>
       ))}
 
-      <button
-        className="nav-item"
-        style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', marginTop: 4, color: 'var(--primary)', fontWeight: 700 }}
-        onClick={() => setShowExportWork(true)}
-        disabled={projects.length === 0}
-      >
+      {/* PROJECT ARCHIVE */}
+      <button className="nav-item" style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', color: 'var(--text-muted)' }}
+        onClick={() => setShowArchive(true)}>
+        <Archive size={16} /> Project Archive
+      </button>
+
+      {/* EXPORT */}
+      <button className="nav-item" style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', color: 'var(--primary)', fontWeight: 700 }}
+        onClick={() => setShowExportWork(true)} disabled={projects.length === 0}>
         <FileDown size={17} /> Export Work Report
       </button>
 
+      {/* NEW PROJECT */}
       <div className="sidebar-bottom">
         <button className="btn btn-primary btn-block" onClick={() => setShowAddProject(true)}>
           <Plus size={17} /> New Project
         </button>
       </div>
 
+      {/* MODALS */}
       {showAddProject && (
         <AddProjectModal
           onClose={() => setShowAddProject(false)}
@@ -124,9 +84,6 @@ export default function Sidebar({ projects, onProjectsChange }) {
       )}
       {showExportWork && (
         <ExportWorkReportModal projects={projects} onClose={() => setShowExportWork(false)} />
-      )}
-      {showAccount && (
-        <AccountSettingsModal onClose={() => setShowAccount(false)} />
       )}
       {showArchive && (
         <ProjectArchiveModal

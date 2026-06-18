@@ -43,7 +43,7 @@ export default function Onboarding() {
         {step === 1 && (
           <>
             <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 6 }}>
-              Selamat datang di Content Planner 👋
+              Selamat datang di TALJER 👋
             </h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: 28 }}>
               Sebelum mulai, yuk buat project pertama kamu. Project bisa berupa klien, brand, atau tim yang kontennya kamu kelola.

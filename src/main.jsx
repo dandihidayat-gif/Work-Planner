@@ -10,6 +10,7 @@ import Onboarding from './pages/Onboarding'
 import Planner from './pages/Planner'
 import TodoList from './pages/TodoList'
 import LinksAccess from './pages/LinksAccess'
+import ResetPassword from './pages/ResetPassword'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -37,6 +38,7 @@ function App() {
           <Route path="/links" element={
             <PrivateRoute><LinksAccess /></PrivateRoute>
           } />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
