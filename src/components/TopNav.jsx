@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { User, LogOut, ChevronDown } from 'lucide-react'
+import { User, LogOut, ChevronDown, Archive } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import AccountSettingsModal from './AccountSettingsModal'
+import ProjectArchiveModal from './ProjectArchiveModal'
 
-export default function TopNav() {
+export default function TopNav({ onProjectsChange }) {
   const { user } = useAuth()
   const [open, setOpen] = useState(false)
   const [showAccount, setShowAccount] = useState(false)
+  const [showArchive, setShowArchive] = useState(false)
   const ref = useRef(null)
 
   const fullName = user?.user_metadata?.full_name || ''
@@ -26,17 +28,12 @@ export default function TopNav() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-  }
-
   return (
     <>
       <div className="top-nav">
         <div className="top-nav-welcome">
           Welcome <strong>{displayName}</strong>
         </div>
-
         <div className="top-nav-right" ref={ref}>
           <button className="top-nav-user" onClick={() => setOpen(v => !v)}>
             <div className="user-avatar-sm">
@@ -54,8 +51,11 @@ export default function TopNav() {
               <button className="dropdown-item" onClick={() => { setOpen(false); setShowAccount(true) }}>
                 <User size={15} /> Account
               </button>
+              <button className="dropdown-item" onClick={() => { setOpen(false); setShowArchive(true) }}>
+                <Archive size={15} /> Project Archive
+              </button>
               <div style={{ height: 1, background: 'var(--border)', margin: '4px 0' }} />
-              <button className="dropdown-item danger" onClick={handleLogout}>
+              <button className="dropdown-item danger" onClick={() => supabase.auth.signOut()}>
                 <LogOut size={15} /> Logout
               </button>
             </div>
@@ -63,8 +63,12 @@ export default function TopNav() {
         </div>
       </div>
 
-      {showAccount && (
-        <AccountSettingsModal onClose={() => setShowAccount(false)} />
+      {showAccount && <AccountSettingsModal onClose={() => setShowAccount(false)} />}
+      {showArchive && (
+        <ProjectArchiveModal
+          onClose={() => setShowArchive(false)}
+          onRestored={() => { setShowArchive(false); onProjectsChange && onProjectsChange() }}
+        />
       )}
     </>
   )

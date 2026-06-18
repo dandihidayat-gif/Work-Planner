@@ -676,9 +676,14 @@ a { color: var(--primary); text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 20px;
+  padding: 14px 28px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
+  background: var(--surface);
+  margin: -28px -36px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .top-nav-welcome {
@@ -887,6 +892,41 @@ a { color: var(--primary); text-decoration: none; }
   padding: 10px 14px;
   border-radius: var(--radius-md);
   margin-bottom: 16px;
+}
+
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 18px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  margin-bottom: 4px;
+}
+.btn-google:hover { background: var(--surface-2); border-color: #c0c8d8; }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
 /* ===== Onboarding ===== */

@@ -16,20 +16,20 @@ export default function Signup() {
     setError('')
     setLoading(true)
     const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+      email, password,
       options: { data: { full_name: name } }
     })
     setLoading(false)
-    if (error) {
-      setError(error.message)
-      return
-    }
-    if (data.session) {
-      navigate('/onboarding')
-    } else {
-      setDone(true)
-    }
+    if (error) { setError(error.message); return }
+    if (data.session) navigate('/onboarding')
+    else setDone(true)
+  }
+
+  const handleGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/onboarding` }
+    })
   }
 
   return (
@@ -52,7 +52,7 @@ export default function Signup() {
           {done ? (
             <>
               <h2>Cek email kamu</h2>
-              <p className="sub">Kami sudah mengirim link konfirmasi ke <strong>{email}</strong>. Klik link tersebut untuk mengaktifkan akun.</p>
+              <p className="sub">Kami sudah mengirim link konfirmasi ke <strong>{email}</strong>.</p>
               <Link to="/login" className="btn btn-secondary btn-block">Kembali ke halaman masuk</Link>
             </>
           ) : (
@@ -62,44 +62,30 @@ export default function Signup() {
 
               {error && <div className="auth-error">{error}</div>}
 
+              {/* Google */}
+              <button type="button" className="btn-google" onClick={handleGoogle}>
+                <img src="/icons/google.svg" alt="" width={20} height={20} />
+                Daftar dengan Google
+              </button>
+
+              <div className="auth-divider"><span>atau</span></div>
+
               <form onSubmit={handleSubmit}>
                 <div className="field-group">
                   <label className="field-label">Nama</label>
-                  <input
-                    type="text"
-                    className="field-input"
-                    placeholder="Nama kamu"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
+                  <input type="text" className="field-input" placeholder="Nama kamu"
+                    value={name} onChange={e => setName(e.target.value)} required />
                 </div>
-
                 <div className="field-group">
                   <label className="field-label">Email</label>
-                  <input
-                    type="email"
-                    className="field-input"
-                    placeholder="nama@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+                  <input type="email" className="field-input" placeholder="nama@email.com"
+                    value={email} onChange={e => setEmail(e.target.value)} required />
                 </div>
-
                 <div className="field-group">
                   <label className="field-label">Password</label>
-                  <input
-                    type="password"
-                    className="field-input"
-                    placeholder="Minimal 6 karakter"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    minLength={6}
-                    required
-                  />
+                  <input type="password" className="field-input" placeholder="Minimal 6 karakter"
+                    value={password} onChange={e => setPassword(e.target.value)} minLength={6} required />
                 </div>
-
                 <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
                   {loading ? 'Memproses...' : 'Daftar'}
                 </button>

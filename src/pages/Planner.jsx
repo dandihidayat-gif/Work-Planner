@@ -70,7 +70,7 @@ export default function Planner() {
       <Sidebar projects={projects} onProjectsChange={fetchProjects} />
 
       <div className="main">
-        <TopNav title={`${format(currentMonth, 'MMMM yyyy')}`} />
+        <TopNav onProjectsChange={fetchProjects} />
         <div className="page-header">
           <div className="page-title-group">
             <button className="icon-btn" onClick={() => setCurrentMonth((m) => subMonths(m, 1))}>

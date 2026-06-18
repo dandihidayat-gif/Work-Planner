@@ -22,6 +22,13 @@ export default function Login() {
     else navigate('/')
   }
 
+  const handleGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin }
+    })
+  }
+
   const handleForgot = async (e) => {
     e.preventDefault()
     setForgotMsg(null)
@@ -59,6 +66,14 @@ export default function Login() {
 
               {error && <div className="auth-error">{error}</div>}
 
+              {/* Google Login */}
+              <button type="button" className="btn-google" onClick={handleGoogle}>
+                <img src="/icons/google.svg" alt="" width={20} height={20} />
+                Lanjutkan dengan Google
+              </button>
+
+              <div className="auth-divider"><span>atau</span></div>
+
               <form onSubmit={handleSubmit}>
                 <div className="field-group">
                   <label className="field-label">Email</label>
@@ -90,7 +105,7 @@ export default function Login() {
           ) : (
             <>
               <h2>Lupa Password</h2>
-              <p className="sub">Masukkan email akun kamu dan kami akan mengirimkan link untuk membuat password baru.</p>
+              <p className="sub">Masukkan email akun kamu untuk mendapatkan link reset.</p>
 
               {forgotMsg && (
                 <div className={forgotMsg.type === 'error' ? 'auth-error' : 'auth-success'}>
@@ -98,18 +113,16 @@ export default function Login() {
                 </div>
               )}
 
-              {!forgotMsg?.type === 'success' || forgotMsg?.type !== 'success' ? (
-                <form onSubmit={handleForgot}>
-                  <div className="field-group">
-                    <label className="field-label">Email</label>
-                    <input type="email" className="field-input" placeholder="nama@email.com"
-                      value={email} onChange={e => setEmail(e.target.value)} required />
-                  </div>
-                  <button type="submit" className="btn btn-primary btn-block" disabled={forgotLoading}>
-                    {forgotLoading ? 'Mengirim...' : 'Kirim Link Reset'}
-                  </button>
-                </form>
-              ) : null}
+              <form onSubmit={handleForgot}>
+                <div className="field-group">
+                  <label className="field-label">Email</label>
+                  <input type="email" className="field-input" placeholder="nama@email.com"
+                    value={email} onChange={e => setEmail(e.target.value)} required />
+                </div>
+                <button type="submit" className="btn btn-primary btn-block" disabled={forgotLoading}>
+                  {forgotLoading ? 'Mengirim...' : 'Kirim Link Reset'}
+                </button>
+              </form>
 
               <div className="auth-footer">
                 <button type="button" onClick={() => { setForgotMode(false); setForgotMsg(null) }}

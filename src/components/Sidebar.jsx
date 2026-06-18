@@ -1,21 +1,18 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckSquare, Plus, Link2, Settings, FileDown, Archive } from 'lucide-react'
+import { Calendar, CheckSquare, Plus, Link2, Settings, FileDown } from 'lucide-react'
 import AddProjectModal from './AddProjectModal'
 import ProjectSettingsModal from './ProjectSettingsModal'
 import ExportWorkReportModal from './ExportWorkReportModal'
-import ProjectArchiveModal from './ProjectArchiveModal'
 
 export default function Sidebar({ projects, onProjectsChange }) {
   const location = useLocation()
   const [showAddProject, setShowAddProject] = useState(false)
   const [settingsProject, setSettingsProject] = useState(null)
   const [showExportWork, setShowExportWork] = useState(false)
-  const [showArchive, setShowArchive] = useState(false)
 
   return (
     <div className="sidebar">
-      {/* LOGO */}
       <div className="sidebar-logo">
         <img src="/icons/logo.svg" alt="TALJER" style={{ width: 34, height: 34 }} />
         <div>
@@ -24,7 +21,6 @@ export default function Sidebar({ projects, onProjectsChange }) {
         </div>
       </div>
 
-      {/* NAV */}
       <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
         <Calendar size={18} /> Planner
       </Link>
@@ -35,7 +31,6 @@ export default function Sidebar({ projects, onProjectsChange }) {
         <Link2 size={18} /> Link & Access
       </Link>
 
-      {/* PROJECTS */}
       <div className="sidebar-section-label">Projects</div>
       {projects.map((p) => (
         <div className="project-item" key={p.id} onClick={() => setSettingsProject(p)}>
@@ -47,49 +42,30 @@ export default function Sidebar({ projects, onProjectsChange }) {
         </div>
       ))}
 
-      {/* PROJECT ARCHIVE */}
-      <button className="nav-item" style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', color: 'var(--text-muted)' }}
-        onClick={() => setShowArchive(true)}>
-        <Archive size={16} /> Project Archive
-      </button>
-
-      {/* EXPORT */}
       <button className="nav-item" style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', color: 'var(--primary)', fontWeight: 700 }}
         onClick={() => setShowExportWork(true)} disabled={projects.length === 0}>
         <FileDown size={17} /> Export Work Report
       </button>
 
-      {/* NEW PROJECT */}
       <div className="sidebar-bottom">
         <button className="btn btn-primary btn-block" onClick={() => setShowAddProject(true)}>
           <Plus size={17} /> New Project
         </button>
       </div>
 
-      {/* MODALS */}
       {showAddProject && (
-        <AddProjectModal
-          onClose={() => setShowAddProject(false)}
-          onCreated={() => { setShowAddProject(false); onProjectsChange() }}
-        />
+        <AddProjectModal onClose={() => setShowAddProject(false)}
+          onCreated={() => { setShowAddProject(false); onProjectsChange() }} />
       )}
       {settingsProject && (
-        <ProjectSettingsModal
-          project={settingsProject}
+        <ProjectSettingsModal project={settingsProject}
           onClose={() => setSettingsProject(null)}
           onSaved={() => { setSettingsProject(null); onProjectsChange() }}
           onDeleted={() => { setSettingsProject(null); onProjectsChange() }}
-          onArchived={() => { setSettingsProject(null); onProjectsChange() }}
-        />
+          onArchived={() => { setSettingsProject(null); onProjectsChange() }} />
       )}
       {showExportWork && (
         <ExportWorkReportModal projects={projects} onClose={() => setShowExportWork(false)} />
-      )}
-      {showArchive && (
-        <ProjectArchiveModal
-          onClose={() => setShowArchive(false)}
-          onRestored={() => onProjectsChange()}
-        />
       )}
     </div>
   )
