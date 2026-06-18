@@ -33,7 +33,7 @@ export default function DonateModal({ onClose }) {
               <div style={{ fontSize: 12.5, color: 'var(--text-muted)', marginBottom: 10, lineHeight: 1.5 }}>
                 Scan QR atau klik tombol di bawah.<br />Sekecil apapun, sangat berarti! 🙏
               </div>
-              <a href="https://saweria.co/dandihidayat" target="_blank" rel="noreferrer"
+              <a href="https://saweria.co/taljer" target="_blank" rel="noreferrer"
                 className="btn btn-primary btn-sm" style={{ display: 'inline-flex', gap: 6 }}>
                 <Heart size={14} fill="currentColor" /> Donasi Sekarang
               </a>
