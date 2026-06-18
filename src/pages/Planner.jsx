@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar'
 import AddPostScheduleModal from '../components/AddPostScheduleModal'
 import PostDetailModal from '../components/PostDetailModal'
 import TopNav from '../components/TopNav'
+import DonateModal from '../components/DonateModal'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import {
@@ -21,6 +22,17 @@ export default function Planner() {
   const [showAddPost, setShowAddPost] = useState(false)
   const [addPostDate, setAddPostDate] = useState(null)
   const [selectedPost, setSelectedPost] = useState(null)
+  const [showDonate, setShowDonate] = useState(false)
+
+  // Show donate popup once per user (for Google login users who skip onboarding)
+  useEffect(() => {
+    if (!user) return
+    const key = `taljer_donate_seen_${user.id}`
+    if (!localStorage.getItem(key)) {
+      setShowDonate(true)
+      localStorage.setItem(key, '1')
+    }
+  }, [user])
 
   const fetchProjects = useCallback(async () => {
     const { data } = await supabase.from('projects').select('*').eq('is_archived', false).order('created_at')
@@ -156,6 +168,10 @@ export default function Planner() {
           onSaved={() => { setSelectedPost(null); fetchPosts() }}
           onDeleted={() => { setSelectedPost(null); fetchPosts() }}
         />
+      )}
+
+      {showDonate && (
+        <DonateModal onClose={() => setShowDonate(false)} />
       )}
     </div>
   )

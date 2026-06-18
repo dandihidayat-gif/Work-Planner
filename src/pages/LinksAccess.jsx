@@ -4,13 +4,23 @@ import AddProjectLinkModal from '../components/AddProjectLinkModal'
 import AddLinkTypeModal from '../components/AddLinkTypeModal'
 import TopNav from '../components/TopNav'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../lib/AuthContext'
 import { Plus, ExternalLink, Trash2 } from 'lucide-react'
 
+const DEFAULT_LINK_TYPES = [
+  { name: 'Instagram', icon_url: '/icons/lt_ig.svg' },
+  { name: 'Website', icon_url: '/icons/lt_web.svg' },
+  { name: 'Figma', icon_url: '/icons/lt_figma.svg' },
+  { name: 'Wordpress', icon_url: '/icons/lt_wp.svg' },
+  { name: 'Google Drive', icon_url: '/icons/lt_drive.svg' },
+]
+
 export default function LinksAccess() {
+  const { user } = useAuth()
   const [projects, setProjects] = useState([])
   const [linkTypes, setLinkTypes] = useState([])
   const [projectLinks, setProjectLinks] = useState([])
-  const [tab, setTab] = useState('links') // 'links' | 'types'
+  const [tab, setTab] = useState('links')
   const [showAddLink, setShowAddLink] = useState(false)
   const [showAddType, setShowAddType] = useState(false)
 
@@ -21,8 +31,17 @@ export default function LinksAccess() {
 
   const fetchLinkTypes = useCallback(async () => {
     const { data } = await supabase.from('link_types').select('*').order('created_at')
-    setLinkTypes(data || [])
-  }, [])
+    // If user has no default link types, seed them now
+    if (data && !data.some(lt => lt.is_default)) {
+      const inserts = DEFAULT_LINK_TYPES.map(lt => ({
+        user_id: user.id, name: lt.name, icon_url: lt.icon_url, is_default: true
+      }))
+      const { data: seeded } = await supabase.from('link_types').insert(inserts).select()
+      setLinkTypes([...(seeded || []), ...(data || [])])
+    } else {
+      setLinkTypes(data || [])
+    }
+  }, [user])
 
   const fetchProjectLinks = useCallback(async () => {
     const { data } = await supabase.from('project_links').select('*').order('created_at')
