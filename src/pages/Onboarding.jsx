@@ -65,7 +65,7 @@ export default function Onboarding() {
               <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
                 <img src="/images/saweria-qr.png" alt="QR Saweria" style={{ width: 90, height: 90, borderRadius: 10, border: '2px solid #fff', flexShrink: 0 }} />
                 <div>
-                  <a href="https://saweria.co/dandihidayat" target="_blank" rel="noreferrer"
+                  <a href="https://saweria.co/taljer" target="_blank" rel="noreferrer"
                     className="btn btn-primary btn-sm"
                     style={{ marginBottom: 8, display: 'inline-flex', gap: 6 }}>
                     <ExternalLink size={14} /> Donasi via Saweria
