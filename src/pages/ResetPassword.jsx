@@ -15,19 +15,43 @@ export default function ResetPassword() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    // Supabase puts access_token in hash when user clicks email link
+    // Handle both hash fragment (#access_token=...) and PKCE flow
     const hash = window.location.hash
     if (hash && hash.includes('access_token')) {
-      // Supabase SDK auto-processes this, just wait for session
-      supabase.auth.getSession().then(({ data }) => {
-        if (data.session) setReady(true)
-        else setError('Link reset tidak valid atau sudah kadaluarsa. Silakan minta link baru.')
-      })
+      // Parse the hash manually and set session
+      const params = new URLSearchParams(hash.substring(1))
+      const access_token = params.get('access_token')
+      const refresh_token = params.get('refresh_token')
+      if (access_token) {
+        supabase.auth.setSession({ access_token, refresh_token: refresh_token || '' })
+          .then(({ data, error }) => {
+            if (error || !data.session) {
+              setError('Link reset tidak valid atau sudah kadaluarsa. Silakan minta link baru.')
+            } else {
+              setReady(true)
+            }
+          })
+      } else {
+        setError('Link reset tidak valid. Silakan minta link baru.')
+      }
     } else {
-      // Also handle PKCE flow via onAuthStateChange
+      // Listen for PASSWORD_RECOVERY event (PKCE flow)
       const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'PASSWORD_RECOVERY' && session) {
           setReady(true)
+        }
+      })
+      // Check if already in recovery session
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session) setReady(true)
+        else {
+          // wait a moment for hash processing
+          setTimeout(() => {
+            supabase.auth.getSession().then(({ data: d2 }) => {
+              if (d2.session) setReady(true)
+              else setError('Link reset tidak valid atau sudah kadaluarsa. Silakan minta link baru dari halaman login.')
+            })
+          }, 1500)
         }
       })
       return () => listener.subscription.unsubscribe()
@@ -48,9 +72,8 @@ export default function ResetPassword() {
     setLoading(true)
     const { error } = await supabase.auth.updateUser({ password: newPassword })
     setLoading(false)
-    if (error) {
-      setError(error.message)
-    } else {
+    if (error) setError(error.message)
+    else {
       await supabase.auth.signOut()
       setSuccess(true)
     }
@@ -60,7 +83,7 @@ export default function ResetPassword() {
     <div className="auth-shell">
       <div className="auth-visual">
         <div className="auth-visual-content">
-          <img src="/images/auth-illustration.png" alt="" className="auth-visual-img" />
+          <img src="/images/reset-password.png" alt="" className="auth-visual-img" />
           <h1>Reset password akunmu.</h1>
           <p>Buat password baru yang kuat untuk melindungi akunmu.</p>
         </div>
@@ -80,10 +103,7 @@ export default function ResetPassword() {
               <p style={{ color: 'var(--text-muted)', marginBottom: 28 }}>
                 Silakan login dengan password baru kamu.
               </p>
-              <button
-                className="btn btn-primary btn-block"
-                onClick={() => navigate('/login')}
-              >
+              <button className="btn btn-primary btn-block" onClick={() => navigate('/login')}>
                 Login Sekarang
               </button>
             </div>
@@ -95,7 +115,9 @@ export default function ResetPassword() {
               {error && <div className="auth-error">{error}</div>}
 
               {!ready && !error && (
-                <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Memvalidasi link reset...</p>
+                <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '16px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div className="spinner" /> Memvalidasi link reset...
+                </div>
               )}
 
               {ready && (
@@ -103,15 +125,10 @@ export default function ResetPassword() {
                   <div className="field-group">
                     <label className="field-label">New Password</label>
                     <div style={{ position: 'relative' }}>
-                      <input
-                        type={showNew ? 'text' : 'password'}
-                        className="field-input"
-                        placeholder="Minimal 6 karakter"
-                        value={newPassword}
+                      <input type={showNew ? 'text' : 'password'} className="field-input"
+                        placeholder="Minimal 6 karakter" value={newPassword}
                         onChange={e => setNewPassword(e.target.value)}
-                        style={{ paddingRight: 44 }}
-                        required
-                      />
+                        style={{ paddingRight: 44 }} required />
                       <button type="button" onClick={() => setShowNew(v => !v)}
                         style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
                         {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -122,15 +139,10 @@ export default function ResetPassword() {
                   <div className="field-group">
                     <label className="field-label">Confirm Password</label>
                     <div style={{ position: 'relative' }}>
-                      <input
-                        type={showConfirm ? 'text' : 'password'}
-                        className="field-input"
-                        placeholder="Ulangi password baru"
-                        value={confirmPassword}
+                      <input type={showConfirm ? 'text' : 'password'} className="field-input"
+                        placeholder="Ulangi password baru" value={confirmPassword}
                         onChange={e => setConfirmPassword(e.target.value)}
-                        style={{ paddingRight: 44 }}
-                        required
-                      />
+                        style={{ paddingRight: 44 }} required />
                       <button type="button" onClick={() => setShowConfirm(v => !v)}
                         style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
                         {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}

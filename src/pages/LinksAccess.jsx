@@ -60,7 +60,7 @@ export default function LinksAccess() {
       <Sidebar projects={projects} onProjectsChange={fetchProjects} />
 
       <div className="main">
-        <TopNav title="Link &amp; Access" />
+        <TopNav />
         <div className="page-header">
           <h1 className="page-title">Link &amp; Access</h1>
           {tab === 'links' ? (

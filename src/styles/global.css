@@ -681,13 +681,12 @@ a { color: var(--primary); text-decoration: none; }
   margin-bottom: 24px;
 }
 
-.top-nav-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+.top-nav-welcome {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
 }
+.top-nav-welcome strong { font-weight: 800; }
 
 .top-nav-right {
   position: relative;
@@ -718,6 +717,16 @@ a { color: var(--primary); text-decoration: none; }
   z-index: 200;
   padding: 4px;
 }
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ===== Sidebar Header / User Dropdown ===== */
 .sidebar-header {

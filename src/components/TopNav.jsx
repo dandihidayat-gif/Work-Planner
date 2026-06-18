@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 import AccountSettingsModal from './AccountSettingsModal'
 
-export default function TopNav({ title }) {
+export default function TopNav() {
   const { user } = useAuth()
   const [open, setOpen] = useState(false)
   const [showAccount, setShowAccount] = useState(false)
@@ -12,6 +12,7 @@ export default function TopNav({ title }) {
 
   const fullName = user?.user_metadata?.full_name || ''
   const email = user?.email || ''
+  const displayName = fullName || email.split('@')[0]
   const initials = fullName
     ? fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
     : email.slice(0, 2).toUpperCase()
@@ -32,15 +33,18 @@ export default function TopNav({ title }) {
   return (
     <>
       <div className="top-nav">
-        <div className="top-nav-title">{title}</div>
+        <div className="top-nav-welcome">
+          Welcome <strong>{displayName}</strong>
+        </div>
+
         <div className="top-nav-right" ref={ref}>
           <button className="top-nav-user" onClick={() => setOpen(v => !v)}>
             <div className="user-avatar-sm">
               {avatar ? <img src={avatar} alt="" /> : <span>{initials}</span>}
             </div>
-            <div className="user-info">
-              <div className="user-name">{fullName || email}</div>
-              <div className="user-email">{fullName ? email : ''}</div>
+            <div className="user-info" style={{ textAlign: 'right' }}>
+              <div className="user-name">{displayName}</div>
+              <div className="user-email">{email}</div>
             </div>
             <ChevronDown size={14} className={`dropdown-chevron ${open ? 'open' : ''}`} />
           </button>

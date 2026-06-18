@@ -91,7 +91,7 @@ export default function TodoList() {
       <Sidebar projects={projects} onProjectsChange={fetchProjects} />
 
       <div className="main">
-        <TopNav title="To Do List" />
+        <TopNav />
         <div className="page-header">
           <h1 className="page-title">To Do List</h1>
           <div style={{ display: 'flex', gap: 10 }}>
