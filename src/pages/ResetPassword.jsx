@@ -81,7 +81,7 @@ export default function ResetPassword() {
 
   return (
     <div className="auth-shell">
-      <div className="auth-visual">
+      <div className="auth-visual auth-visual-centered">
         <div className="auth-visual-content">
           <img src="/images/reset-password.png" alt="" className="auth-visual-img" />
           <h1>Reset password akunmu.</h1>

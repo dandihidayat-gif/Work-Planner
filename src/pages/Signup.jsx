@@ -34,9 +34,10 @@ export default function Signup() {
 
   return (
     <div className="auth-shell">
-      <div className="auth-visual">
+      <div className="auth-visual" style={{ backgroundImage: "url('/images/signup.webp')" }}>
+        <div className="auth-visual-overlay" />
         <div className="auth-visual-content">
-          <img src="/images/auth-illustration.png" alt="" className="auth-visual-img" />
+          <img src="/icons/whitelogo.svg" alt="TALJER" className="auth-visual-logo" />
           <h1>Mulai kelola konten project kamu hari ini.</h1>
           <p>Buat akun gratis, tambahkan project pertama kamu, dan langsung jadwalkan postingan di kalender.</p>
         </div>

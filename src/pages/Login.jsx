@@ -44,9 +44,10 @@ export default function Login() {
 
   return (
     <div className="auth-shell">
-      <div className="auth-visual">
+      <div className="auth-visual" style={{ backgroundImage: "url('/images/login.webp')" }}>
+        <div className="auth-visual-overlay" />
         <div className="auth-visual-content">
-          <img src="/images/auth-illustration.png" alt="" className="auth-visual-img" />
+          <img src="/icons/whitelogo.svg" alt="TALJER" className="auth-visual-logo" />
           <h1>Rencanakan konten, satu kalender untuk semua project.</h1>
           <p>Atur jadwal posting, pantau status publikasi, dan kelola to-do list tim kreatif kamu dalam satu tempat.</p>
         </div>
