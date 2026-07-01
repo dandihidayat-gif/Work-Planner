@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckSquare, Plus, Link2, Settings, FileDown } from 'lucide-react'
+import { Calendar, CheckSquare, Plus, Link2, Settings, FileDown, Search } from 'lucide-react'
 import AddProjectModal from './AddProjectModal'
 import ProjectSettingsModal from './ProjectSettingsModal'
 import ExportWorkReportModal from './ExportWorkReportModal'
@@ -13,6 +13,7 @@ export default function Sidebar({ projects, onProjectsChange }) {
 
   return (
     <div className="sidebar">
+      {/* LOGO */}
       <div className="sidebar-logo">
         <img src="/icons/logo.svg" alt="TALJER" style={{ width: 34, height: 34 }} />
         <div>
@@ -21,6 +22,7 @@ export default function Sidebar({ projects, onProjectsChange }) {
         </div>
       </div>
 
+      {/* NAV */}
       <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
         <Calendar size={18} /> Planner
       </Link>
@@ -30,24 +32,30 @@ export default function Sidebar({ projects, onProjectsChange }) {
       <Link to="/links" className={`nav-item ${location.pathname === '/links' ? 'active' : ''}`}>
         <Link2 size={18} /> Link & Access
       </Link>
+      <Link to="/seo" className={`nav-item ${location.pathname === '/seo' ? 'active' : ''}`}>
+        <Search size={18} /> SEO Page
+      </Link>
 
+      {/* PROJECTS - 2 column grid */}
       <div className="sidebar-section-label">Projects</div>
-      {projects.map((p) => (
-        <div className="project-item" key={p.id} onClick={() => setSettingsProject(p)}>
-          <div className="project-dot">
-            {p.logo_url ? <img src={p.logo_url} alt={p.name} /> : p.name.slice(0, 2).toUpperCase()}
+      <div className="project-grid">
+        {projects.map((p) => (
+          <div className="project-grid-item" key={p.id} onClick={() => setSettingsProject(p)}
+            title={p.name}>
+            <div className="project-dot">
+              {p.logo_url ? <img src={p.logo_url} alt={p.name} /> : p.name.slice(0, 2).toUpperCase()}
+            </div>
+            <span className="project-grid-name">{p.name}</span>
           </div>
-          <span style={{ flex: 1 }}>{p.name}</span>
-          <Settings size={14} className="project-settings-icon" />
-        </div>
-      ))}
+        ))}
+      </div>
 
-      <button className="nav-item" style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', color: 'var(--primary)', fontWeight: 700 }}
-        onClick={() => setShowExportWork(true)} disabled={projects.length === 0}>
-        <FileDown size={17} /> Export Work Report
-      </button>
-
+      {/* STICKY BOTTOM */}
       <div className="sidebar-bottom">
+        <button className="nav-item" style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left', color: 'var(--primary)', fontWeight: 700 }}
+          onClick={() => setShowExportWork(true)} disabled={projects.length === 0}>
+          <FileDown size={17} /> Export Work Report
+        </button>
         <button className="btn btn-primary btn-block" onClick={() => setShowAddProject(true)}>
           <Plus size={17} /> New Project
         </button>

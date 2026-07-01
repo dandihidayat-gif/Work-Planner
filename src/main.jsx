@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './styles/global.css'
+import './styles/seo.css'
 
 import { AuthProvider, useAuth } from './lib/AuthContext'
 import Login from './pages/Login'
@@ -11,6 +12,7 @@ import Planner from './pages/Planner'
 import TodoList from './pages/TodoList'
 import LinksAccess from './pages/LinksAccess'
 import ResetPassword from './pages/ResetPassword'
+import SEOPage from './pages/SEOPage'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -37,6 +39,9 @@ function App() {
           } />
           <Route path="/links" element={
             <PrivateRoute><LinksAccess /></PrivateRoute>
+          } />
+          <Route path="/seo" element={
+            <PrivateRoute><SEOPage /></PrivateRoute>
           } />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/" replace />} />
